@@ -1,0 +1,142 @@
+---
+layout: layouts/base.njk
+---
+<div class="pergamena-container">
+  <div style="text-align: center; border-bottom: 2px solid #8b5a2b; padding-bottom: 1rem; margin-bottom: 2rem;">
+    <h1 style="margin-bottom: 0;">{{ title }}</h1>
+    {% if info_base.nome_giocatore %}<p style="margin-top: 0.5rem; font-style: italic;">Giocato da: {{ info_base.nome_giocatore }}</p>{% endif %}
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; background: rgba(255,255,255,0.4); padding: 1rem; border-radius: 8px;">
+    <div style="flex: 1; min-width: 200px;">
+      <strong>Razza:</strong> {{ info_base.razza }}<br>
+      <strong>Classe:</strong> 
+      {% if info_base.classi %}
+        {% for c in info_base.classi %}
+          {{ c.nome }} (Liv. {{ c.livello }}){% if not loop.last %} / {% endif %}
+        {% endfor %}
+      {% else %}
+        {{ info_base.classe }}
+      {% endif %}
+      <br>
+      {% if not info_base.classi %}
+        <strong>Livello:</strong> {{ info_base.livello }}<br>
+      {% endif %}
+      <strong>Background:</strong> {{ info_base.background }}
+    </div>
+    <div style="flex: 1; min-width: 200px;">
+      <strong>Allineamento:</strong> {{ info_base.allineamento }}<br>
+      <strong>Sesso:</strong> {{ info_base.sesso }}<br>
+      <strong>Età:</strong> {{ aspetto.eta }}
+    </div>
+  </div>
+
+  <!-- CARATTERISTICHE E MODIFICATORI -->
+  <div style="display: flex; justify-content: space-around; flex-wrap: wrap; text-align: center; background: #3e2723; color: #fff; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; gap: 0.5rem;">
+    <div><strong>FOR</strong><br><span style="font-size: 1.5rem;">{{ caratteristiche.forza | default("-") }}</span>{% if caratteristiche.mod_forza %}<br><span style="color: #e2cc98; font-size: 1.1rem; font-weight: bold;">{{ caratteristiche.mod_forza }}</span>{% endif %}</div>
+    <div><strong>DES</strong><br><span style="font-size: 1.5rem;">{{ caratteristiche.destrezza | default("-") }}</span>{% if caratteristiche.mod_destrezza %}<br><span style="color: #e2cc98; font-size: 1.1rem; font-weight: bold;">{{ caratteristiche.mod_destrezza }}</span>{% endif %}</div>
+    <div><strong>COS</strong><br><span style="font-size: 1.5rem;">{{ caratteristiche.costituzione | default("-") }}</span>{% if caratteristiche.mod_costituzione %}<br><span style="color: #e2cc98; font-size: 1.1rem; font-weight: bold;">{{ caratteristiche.mod_costituzione }}</span>{% endif %}</div>
+    <div><strong>INT</strong><br><span style="font-size: 1.5rem;">{{ caratteristiche.intelligenza | default("-") }}</span>{% if caratteristiche.mod_intelligenza %}<br><span style="color: #e2cc98; font-size: 1.1rem; font-weight: bold;">{{ caratteristiche.mod_intelligenza }}</span>{% endif %}</div>
+    <div><strong>SAG</strong><br><span style="font-size: 1.5rem;">{{ caratteristiche.saggezza | default("-") }}</span>{% if caratteristiche.mod_saggezza %}<br><span style="color: #e2cc98; font-size: 1.1rem; font-weight: bold;">{{ caratteristiche.mod_saggezza }}</span>{% endif %}</div>
+    <div><strong>CAR</strong><br><span style="font-size: 1.5rem;">{{ caratteristiche.carisma | default("-") }}</span>{% if caratteristiche.mod_carisma %}<br><span style="color: #e2cc98; font-size: 1.1rem; font-weight: bold;">{{ caratteristiche.mod_carisma }}</span>{% endif %}</div>
+  </div>
+
+  <!-- COMBATTIMENTO -->
+  <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; margin-bottom: 2rem; font-size: 1.2rem;">
+    <div>🛡️ <strong>CA:</strong> {{ combattimento.ca }}</div>
+    <div>❤️ <strong>PF:</strong> {{ combattimento.pf_max }}</div>
+    <div>⚡ <strong>Iniziativa:</strong> {{ combattimento.iniziativa }}</div>
+    <div>🏃 <strong>Velocità:</strong> {{ combattimento.velocita }}</div>
+    {% if combattimento.competenza %}<div>⭐ <strong>Competenza:</strong> {{ combattimento.competenza }}</div>{% endif %}
+  </div>
+
+  <hr style="border-top: 1px dashed #8b5a2b; opacity: 0.5; margin-bottom: 2rem;">
+
+  <!-- ARMI -->
+  {% if armi.length > 0 %}
+    <h3>Attacchi e Armi</h3>
+    <ul>
+      {% for arma in armi %}
+        <li><strong>{{ arma.nome }}</strong> — Attacco: {{ arma.bonus }} | Danni: {{ arma.danni }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <!-- ABILITÀ (Skills) -->
+  {% if abilita_lista %}
+    <h3 style="margin-top: 1.5rem;">Abilità</h3>
+    <ul>
+      {% for ab in abilita_lista %}
+        <li><strong>{{ ab.nome }}:</strong> {{ ab.valore }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <!-- ALTRE COMPETENZE E LINGUE -->
+  {% if competenze_lista %}
+    <h3 style="margin-top: 1.5rem;">Altre Competenze e Lingue</h3>
+    <ul>
+      {% for comp in competenze_lista %}
+        <li>
+          <strong>{{ comp.nome }}</strong>{% if comp.dettagli %} - {{ comp.dettagli }}{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <!-- TALENTI -->
+  {% if talenti %}
+    <h3 style="margin-top: 1.5rem;">Talenti</h3>
+    <ul>
+      {% for talento in talenti %}
+        <li>
+          <strong>{{ talento.nome }}</strong>
+          {% if talento.descrizione %}<br><span style="font-size: 0.9em;">{{ talento.descrizione }}</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <!-- PRIVILEGI DI CLASSE E RAZZIALI -->
+  {% if privilegi_lista %}
+    <h3 style="margin-top: 1.5rem;">Privilegi di Classe e Razziali</h3>
+    <ul>
+      {% for priv in privilegi_lista %}
+        <li>
+          <strong>{{ priv.nome }}</strong>
+          {% if priv.descrizione %}<br><span style="font-size: 0.9em;">{{ priv.descrizione }}</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <!-- EQUIPAGGIAMENTO -->
+  {% if equipaggiamento_lista %}
+    <h3 style="margin-top: 1.5rem;">Equipaggiamento e Monete</h3>
+    <ul>
+      {% for eq in equipaggiamento_lista %}
+        <li>
+          <strong>{{ eq.nome }}</strong> {% if eq.quantita %}(x{{ eq.quantita }}){% endif %}
+          {% if eq.dettagli %}<br><span style="font-size: 0.9em;">{{ eq.dettagli }}</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <!-- INCANTESIMI -->
+  {% if incantesimi_lista %}
+    <h3 style="margin-top: 1.5rem;">Magia e Incantesimi</h3>
+    <ul style="list-style-type: none; padding-left: 0; margin-bottom: 1.5rem;">
+      {% for inc in incantesimi_lista %}
+        <li style="margin-bottom: 0.8rem; line-height: 1.6;">
+          <strong style="color: #8b5a2b;">{{ inc.livello }}:</strong> {{ inc.lista }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <!-- STORIA / BACKGROUND ESTESO (Il testo libero in fondo al CMS) -->
+  <div class="testo-personaggio" style="margin-top: 2.5rem; border-top: 2px solid #8b5a2b; padding-top: 1.5rem;">
+    {{ content | safe }}
+  </div>
+</div>
